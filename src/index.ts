@@ -1,6 +1,7 @@
 import { Card } from "./card";
 import { Hand } from "./hand";
 import { compareHands, determineWinner } from "./evaluator";
+import { dealPokerHands, formatComparisonResult } from "./utils";
 import {
   Rank,
   Suit,
@@ -104,12 +105,76 @@ export function compareHandsFromStrings(
 }
 
 if (require.main === module) {
+  console.log("=== COMPARATEUR DE MAINS DE POKER ===\n");
+
   const hand1 = "AH KH QH JH 10H";
   const hand2 = "AS KS QS JS 9S";
 
   console.log(`Main 1: ${hand1}`);
   console.log(`Main 2: ${hand2}`);
   console.log("Résultat:", compareHandsFromStrings(hand1, hand2));
+
+  console.log("\n=== SIMULATION D'UNE PARTIE ===\n");
+
+  try {
+    const hands = dealPokerHands(4);
+
+    console.log("Distribution des cartes:");
+    hands.forEach((hand, index) => {
+      console.log(`Joueur ${index + 1}: ${hand.join(" ")}`);
+    });
+
+    console.log("\nComparaison des mains:");
+
+    for (let i = 0; i < hands.length; i++) {
+      for (let j = i + 1; j < hands.length; j++) {
+        const result = compareHandsFromStrings(
+          hands[i].join(" "),
+          hands[j].join(" ")
+        );
+        console.log(`Joueur ${i + 1} vs Joueur ${j + 1}:`, result);
+      }
+    }
+
+    let winCount = new Array(hands.length).fill(0);
+
+    for (let i = 0; i < hands.length; i++) {
+      for (let j = 0; j < hands.length; j++) {
+        if (i === j) continue;
+
+        const result = compareHandsFromStrings(
+          hands[i].join(" "),
+          hands[j].join(" ")
+        );
+        if (
+          "result" in result &&
+          result.result === ComparisonResult.Hand1Wins
+        ) {
+          winCount[i]++;
+        }
+      }
+    }
+
+    const maxWins = Math.max(...winCount);
+    const winners = winCount
+      .map((count, index) => ({ count, index }))
+      .filter((item) => item.count === maxWins)
+      .map((item) => item.index + 1);
+
+    if (winners.length === 1) {
+      console.log(
+        `\nLe gagnant est le Joueur ${winners[0]} avec ${maxWins} victoires!`
+      );
+    } else {
+      console.log(
+        `\nÉgalité entre les Joueurs ${winners.join(
+          ", "
+        )} avec ${maxWins} victoires chacun!`
+      );
+    }
+  } catch (error) {
+    console.error("Erreur lors de la simulation:", error);
+  }
 }
 
 export {
