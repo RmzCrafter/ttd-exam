@@ -8,6 +8,8 @@ Ce projet implémente un évaluateur de mains de poker en TypeScript, permettant
 - Détection des différentes combinaisons de poker (Quinte Flush Royale, Carré, Full, etc.)
 - Comparaison de deux mains pour déterminer la plus forte
 - Gestion des cas d'égalité selon les règles officielles
+- Simulation de parties et tournois de poker
+- Génération et distribution de mains aléatoires
 
 ## Structure du Projet
 
@@ -16,6 +18,7 @@ Ce projet implémente un évaluateur de mains de poker en TypeScript, permettant
   - `card.ts` : Modélisation des cartes
   - `hand.ts` : Modélisation et évaluation des mains
   - `evaluator.ts` : Logique de comparaison des mains
+  - `utils.ts` : Fonctions utilitaires (génération de jeu, distribution, etc.)
   - `index.ts` : Point d'entrée principal
 - `tests/` : Tests unitaires
   - `types/` : Types pour les tests
@@ -23,6 +26,8 @@ Ce projet implémente un évaluateur de mains de poker en TypeScript, permettant
   - `hand.test.ts` : Tests pour les mains
   - `evaluator.test.ts` : Tests pour l'évaluateur
   - `run-tests.ts` : Framework de test simple
+- `examples/` : Exemples d'utilisation
+  - `tournament.ts` : Simulation d'un tournoi de poker
 
 ## Installation
 
@@ -46,12 +51,45 @@ Ce projet a été développé suivant une approche TDD (Test-Driven Development)
 
 ## Utilisation
 
+### Comparaison simple de deux mains
+
 ```typescript
 import { compareHandsFromStrings } from "poker-hand-evaluator";
 
-// Comparer deux main
+// Comparer deux mains
 const result = compareHandsFromStrings("AH KH QH JH 10H", "AS KS QS JS 9S");
 console.log(result);
+```
+
+### Simulation d'une partie
+
+```typescript
+import { dealPokerHands, compareHandsFromStrings } from "poker-hand-evaluator";
+
+// Distribuer des mains à 4 joueurs
+const hands = dealPokerHands(4);
+
+// Comparer les mains
+for (let i = 0; i < hands.length; i++) {
+  for (let j = i + 1; j < hands.length; j++) {
+    const result = compareHandsFromStrings(
+      hands[i].join(" "),
+      hands[j].join(" ")
+    );
+    console.log(`Joueur ${i + 1} vs Joueur ${j + 1}:`, result);
+  }
+}
+```
+
+### Exécuter un exemple de tournoi
+
+```bash
+# Compiler le projet
+npm run build
+
+# Exécuter l'exemple de tournoi
+npx ts-node examples/tournament.ts
+```
 
 ## Règles du Poker
 
