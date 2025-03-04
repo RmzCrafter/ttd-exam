@@ -1,0 +1,19 @@
+{
+  "name": "poker-hand-evaluator",
+  "version": "1.0.0",
+  "description": "Comparateur de mains de poker avec approche TDD en TypeScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "ts-node tests/run-tests.ts",
+    "start": "ts-node src/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
